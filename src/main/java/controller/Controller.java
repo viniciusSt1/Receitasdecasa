@@ -21,8 +21,9 @@ import model.User;
 @WebServlet(urlPatterns = { "/comentar", "/cadastrarReceita", "/receita" })
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	HttpSession session;
 	private CommentDAO comentarioDAO = new CommentDAO();
-	private RecipeDAO recipe_DAO = new RecipeDAO();
+	private RecipeDAO recipeDAO = new RecipeDAO();
 	private Recipe receita = new Recipe();
 	private User autor = new User();
 
@@ -44,7 +45,7 @@ public class Controller extends HttpServlet {
 		String conteudo = request.getParameter("conteudo"); // Supondo que "conteudo" seja o nome do campo de texto do comentário
 		int idReceita = Integer.parseInt(request.getParameter("receita_id")); // Supondo que "idReceita" seja o ID da receita à qual o comentário será associado
 		
-		HttpSession session = request.getSession();
+		session = request.getSession();
 		autor = (User) session.getAttribute("usuario"); // pegar usuario logado atualmente
 
 		// Criando um objeto Comment com os dados fornecidos
@@ -58,13 +59,14 @@ public class Controller extends HttpServlet {
 
 		// Adicionando o comentário ao banco de dados usando o CommentDAO
 		comentarioDAO.adicionarComentario(novoComentario);
+		comentarioDAO.atualizaQntComentario(idReceita, 1);
 
 		// Redirecionando de volta para a página da receita ou realizando outra ação desejada
-		response.sendRedirect("receita?receita_id="+request.getParameter("receita_id")); // Colocar a rota
+		response.sendRedirect("receita?receita_id="+request.getParameter("receita_id")); 
 	}
 
 	protected void cadastrarReceita(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
+		session = request.getSession();
 		autor = (User) session.getAttribute("usuario");
 		ArrayList<Category> vet_categorias = new ArrayList<Category>();
 		int id_cat = 0;
@@ -76,9 +78,11 @@ public class Controller extends HttpServlet {
 		if(cache_checkbox!= null && cache_checkbox.length> 0) {
 			
 			for (String categoria : cache_checkbox) {	//preenchendo o ArrayList de categorias de acordo com o forms
-				id_cat = recipe_DAO.getID_categoria(categoria);
+				id_cat = recipeDAO.getCategoria(categoria);
 				vet_categorias.add(new Category(id_cat, categoria));
 			}
+			
+			//falta atualizar a qntRecipeCriada na classe user
 			
 			// Inserção da Receita
 			receita.setTitulo(request.getParameter("titulo"));
@@ -86,9 +90,13 @@ public class Controller extends HttpServlet {
 			receita.setConteudo(request.getParameter("conteudo"));
 			receita.setCategorias(vet_categorias);
 			receita.setAutor(autor);
-			recipe_DAO.cadastrarReceita(receita);
-			recipe_DAO.cadastrarCategoria(receita);
-			recipe_DAO.atualiza_qntReceita(autor);
+			recipeDAO.cadastrarReceita(receita);
+			recipeDAO.cadastrarCategoria(receita);
+			recipeDAO.atualiza_qntReceita(autor.getId(),1);
+			
+			autor.atualizarQntReceitasCriadas(1); //atualizando na sessao o valor correto de qnt receitas
+			session.setAttribute("usuario", autor);
+			
 			response.sendRedirect("index.html"); // redirecionar para pagina inicial
 		}
 		else {
@@ -104,7 +112,7 @@ public class Controller extends HttpServlet {
 	    int IDreceita = Integer.parseInt(request.getParameter("receita_id"));
 	    
 	    // Obtendo a receita com base no ID
-	    Recipe receita = recipe_DAO.getReceitaPorId(IDreceita);
+	    receita = recipeDAO.getReceitaPorId(IDreceita);
 	    ArrayList<Comment> comentarios = comentarioDAO.getComentariosPorReceita(receita.getId());
 	            
 	    // Enviando a receita para o JSP

@@ -69,4 +69,8 @@ public class User {
 	public void setQntReceitas(int qntReceitas) {
 		this.qntReceitas = qntReceitas;
 	}
+	
+	public void atualizarQntReceitasCriadas(int valor) {
+		qntReceitas=qntReceitas+valor;
+	}
 }

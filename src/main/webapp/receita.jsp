@@ -11,8 +11,10 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Receitasdecasa</title>
+	<title>Receitas de casa</title>
+	<link rel="stylesheet" href="./styles/configs.css">
 	<link rel="stylesheet" href="./styles/receita.css">
+	<link class="favicon" rel="shortcut icon" type="png" href="./imgs/favicon.png">
 </head>
 <body>
 	<%@ include file="header.jsp"%>
@@ -30,13 +32,17 @@
 				<span><%= receita.getCategorias().get(i).getNome() %></span>
 			<%} %>
 		</p>
-	
+		
+		<% if(usuarioOnline != null && usuarioOnline.getAdmin()){ %>
+		<a class="deleteRecipe" href="deletarRecipe?receita_id=<%= receita.getId() %>">Deletar Receita</a>
+		<%} %>
+		
 		<div class="quad">
 			<p>Ingredientes</p>
 		</div>
 	
 		<div class="texto">
-			<p><%= receita.getIngredientes() %></p>
+			<p><%= receita.getIngredientes().replace("\n", "<br>") %></p>
 		</div>
 	
 		<div class="quad">
@@ -44,7 +50,7 @@
 		</div>
 	
 		<div class="texto">
-			<p><%= receita.getConteudo() %></p>
+			<p><%= receita.getConteudo().replace("\n", "<br>") %></p>
 		</div>
 	
 		<div class="quad">
@@ -72,6 +78,6 @@
 			
 		</div>
 	</div>
-	
+	<%@ include file="footer.jsp"%>
 </body>
 </html>

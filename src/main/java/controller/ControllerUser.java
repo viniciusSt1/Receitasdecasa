@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +18,7 @@ public class ControllerUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserDAO dao = new UserDAO();
 	private User usuario = new User();
+	HttpSession session;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getServletPath();
@@ -36,8 +38,7 @@ public class ControllerUser extends HttpServlet {
 
 	}
 
-	protected void cadastrarUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void cadastrarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User novoUsuario = new User();
 		String confsenha = request.getParameter("confsenha");
 		// pegar parametros recebidos atraves do forms
@@ -48,7 +49,13 @@ public class ControllerUser extends HttpServlet {
 		
 		if (novoUsuario.getSenha().equals(confsenha)) {
 			// mandar um usuario para classe dao fazer o cadastro no bd
-			dao.cadastrarUsuario(novoUsuario);
+			try {
+				dao.cadastrarUsuario(novoUsuario);
+			}catch(SQLException e) {
+				String alerta = "Email ja existente";
+				request.setAttribute("alerta", alerta);
+				request.getRequestDispatcher("/cadastro.jsp").forward(request, response);
+			}
 			response.sendRedirect("index.html"); // redirecionar para pagina inicial
 		}
 		else {
@@ -56,11 +63,11 @@ public class ControllerUser extends HttpServlet {
 			request.setAttribute("alerta", alerta);
 			request.getRequestDispatcher("/cadastro.jsp").forward(request, response);
 		}
+		
 	}
 
-	protected void deletarUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+	protected void deletarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
 		usuario = (User) session.getAttribute("usuario"); // pegar usuario logado atualmente
 
 		if (dao.deletarUsuario(usuario.getId())) { // enviar id do usuario a ser deletado do bd
@@ -70,11 +77,11 @@ public class ControllerUser extends HttpServlet {
 			System.out.println("Falha ao deletar usuario");
 			response.sendRedirect("perfil.jsp");
 		}
+		
 	}
 
-	protected void atualizarUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+	protected void atualizarUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
 		usuario = (User) session.getAttribute("usuario"); // pegar usuario logado atualmente
 		User usuarioAtualizado = new User();
 
@@ -95,9 +102,8 @@ public class ControllerUser extends HttpServlet {
 
 	}
 
-	protected void login(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		HttpSession session = request.getSession();
+	protected void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
 		// pegando dados de email e senha preechidos no forms
 		String email = request.getParameter("email");
 		String senha = request.getParameter("senha");
@@ -114,9 +120,8 @@ public class ControllerUser extends HttpServlet {
 
 	}
 
-	protected void deslogar(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		HttpSession session = request.getSession(); // pegando sessao atual
+	protected void deslogar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession(); // pegando sessao atual
 		session.invalidate(); // encerrando sessao
 		response.sendRedirect("index.html");
 	}

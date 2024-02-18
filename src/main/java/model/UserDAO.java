@@ -3,13 +3,13 @@ package model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDAO extends DAO {
 	private User usuario;
 
-	public void cadastrarUsuario(User usuario) {
-		String create = "insert into Usuarios (nome,email,senha,isAdmin) values (?,?,?,?)"; // comando a ser executado
-																							// no bd
+	public void cadastrarUsuario(User usuario) throws SQLException{	//exceção para email já existente
+		String create = "insert into Usuarios (nome,email,senha,isAdmin) values (?,?,?,?)"; // comando a ser executado no bd
 
 		try {
 			Connection con = conectar(); // abrindo conexao
@@ -25,16 +25,17 @@ public class UserDAO extends DAO {
 			pst.executeUpdate(); // executando comandos
 
 			con.close();
-		} catch (Exception e) {
-			System.out.println(e);
+		} catch (SQLException e) {
+	        throw e;
+	    }catch (Exception e) {
+			System.out.println("Erro ao cadastrar Usuario no BD: " + e.getMessage());
 		}
 
 	}
 
 	public User validarCredenciais(String email, String senha) {
 		usuario = null;
-		String query = "SELECT * FROM Usuarios WHERE email = ? AND senha = ?"; // comando a ser
-																				// executado no bd
+		String query = "SELECT * FROM Usuarios WHERE email = ? AND senha = ?"; // comando a ser executado no bd
 
 		try {
 			Connection con = conectar(); // abrindo conexao
@@ -57,7 +58,7 @@ public class UserDAO extends DAO {
 			}
 
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Erro ao validar credenciais: " + e.getMessage());
 		}
 
 		return usuario;
@@ -78,7 +79,7 @@ public class UserDAO extends DAO {
 			con.close();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Erro ao deletar usuário: " + e.getMessage());
 		}
 
 		return false;
@@ -102,7 +103,7 @@ public class UserDAO extends DAO {
 
 			con.close();
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Erro ao atualizar dados do usuário: " + e.getMessage());
 		}
 
 	}

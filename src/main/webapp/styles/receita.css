@@ -24,6 +24,17 @@ h2{
 	width: 80%;
 }
 
+.deleteRecipe{
+	margin:1.5rem;
+	padding:.8rem 2rem;
+	background-color: rgb(190,20,20);
+	color:white;
+	font-size: 1.4rem;
+	font-family: sans-serif;
+	text-decoration: none;
+	border-radius: .2rem;
+}
+
 .categorias span{
 	padding:.5rem 1rem;
 	background-color: #f9f9f9;

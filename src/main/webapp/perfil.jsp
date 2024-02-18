@@ -56,7 +56,7 @@
 
 			<div class="quadro">
 				<h3 class="titulo-quadro">Curtidas Recebidas</h3>
-				<p class="numero-quadro">50</p>
+				<p class="numero-quadro">?</p>
 			</div>
 			<%}else{ %>
 			<hr>
@@ -70,5 +70,6 @@
 		
 	</div>
 	<%} //fechamento de else%>
+
 	</body>
 </html>

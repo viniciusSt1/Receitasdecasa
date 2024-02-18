@@ -13,6 +13,8 @@ String categoria = (String) request.getAttribute("categoria");
 <title>Receitas de casa</title>
 <link rel="stylesheet" href="./styles/configs.css">
 <link rel="stylesheet" href="./styles/receitas.css">
+<link class="favicon" rel="shortcut icon" type="png"
+	href="./imgs/favicon.png">
 </head>
 <body>
 	<%@ include file="header.jsp"%>
@@ -34,7 +36,7 @@ String categoria = (String) request.getAttribute("categoria");
 				<p>Doces e Sobremesas</p>
 			</a>
 		</div>
-		
+
 		<div class="categoria-item">
 			<a href="receitas?categoria_id=4"> <img src="./imgs/imagem3.jpg">
 				<p>Café da tarde</p>
@@ -70,11 +72,14 @@ String categoria = (String) request.getAttribute("categoria");
 			}
 			%>
 		</h2>
+
 		<%
 		for (int i = 0; i < receitas.size() && i < 12; i++) {
 		%>
 		<div class="quadroReceita">
-			<p class="usuarioPub">Publicado por: <%=receitas.get(i).getAutor().getNome()%></p>
+			<p class="usuarioPub">
+				Publicado por:
+				<%=receitas.get(i).getAutor().getNome()%></p>
 			<a href="receita?receita_id=<%=receitas.get(i).getId()%>"
 				class="tituloReceita"><%=receitas.get(i).getTitulo()%></a>
 			<p class="qntComentarios">
@@ -86,5 +91,7 @@ String categoria = (String) request.getAttribute("categoria");
 		}
 		%>
 	</div>
+	
+	<%@ include file="footer.jsp"%>
 </body>
 </html>

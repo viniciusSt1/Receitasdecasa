@@ -33,11 +33,11 @@ public class RecipeDAO extends DAO {
 			con.close();
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Erro ao cadastrar receita: " + e.getMessage());
 		}
 	}
 	
-	public int getID_categoria(String categoriaName) {	//Método responsável por retornar o ID de uma categoria através de um nome, préviamente cadastrado no BD
+	public int getCategoria(String categoriaName) {	//Método responsável por retornar o ID de uma categoria através de um nome, préviamente cadastrado no BD
 		int ID = 0;
 		try {
 			String create = "select categoria_id from categorias where nome = ?";	//comando sql a ser executado
@@ -55,12 +55,12 @@ public class RecipeDAO extends DAO {
 			con.close();
 					
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Erro ao solicitar o ID da categoria: " + e.getMessage());
 		}
 		return ID;
 	}
 	
-	public String getString_categoria(int idCategoria) {
+	public String getCategoria(int idCategoria) {	//sobrecarga getCategoria, este método retorna o nome da categoria atraves do ID
 		String categoriaName = null;
 		try {
 			String create = "select nome from categorias where categoria_id = ?";	//comando sql a ser executado
@@ -78,7 +78,7 @@ public class RecipeDAO extends DAO {
 			con.close();
 					
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Erro ao solicitar o nome da categoria: " + e.getMessage());
 		}
 		
 		return categoriaName;
@@ -102,25 +102,25 @@ public class RecipeDAO extends DAO {
 			con.close();
 		}
 		catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Erro ao cadastrar a lista de categorias no BD " + e.getMessage());
 		}
 		
 	}
 
-	public void atualiza_qntReceita(User autor) {	//método responsável por acrescentar 1 a quantidade de receitas criadas por um usuario
+	public void atualiza_qntReceita(int idAutor, int qnt) {	//método responsável por acrescentar somar ou subtrair a quantidade de receitas criadas por um usuario
 		try {
-			String atualizar = "update usuarios set qntReceitas = qntReceitas + 1 where usuario_id = ?";
+			String atualizar = "update usuarios set qntReceitas = qntReceitas + ? where usuario_id = ?";
 
 			Connection con = conectar(); // abrir conexão
 			PreparedStatement pst = con.prepareStatement(atualizar); // preparar query a ser executada
 			
-			pst.setInt(1, autor.getId());
+			pst.setInt(1, qnt);
+			pst.setInt(2, idAutor);
 			pst.executeUpdate();
 			con.close();
-			autor.setQntReceitas(autor.getQntReceitas() + 1);
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Erro ao atualizar quantidade de receitas: " + e.getMessage());
 		}
 	}
 	
@@ -133,8 +133,8 @@ public class RecipeDAO extends DAO {
 			Connection con = conectar(); // abrir conexão
 
 			PreparedStatement pst = con.prepareStatement(read); // preparando a querry com o comando a ser executado
-			ResultSet rs = pst.executeQuery(); // executando o comando trazendo todos os dados para o ResultSet
-												// (importado)
+			ResultSet rs = pst.executeQuery(); // executando o comando trazendo todos os dados para o ResultSet (importado)
+			
 			// percorrento todos os registros do resultado da requisição
 			while (rs.next()) {
 				int id = rs.getInt(1); // pegando so valores do result set
@@ -145,8 +145,8 @@ public class RecipeDAO extends DAO {
 				int qntComentario = rs.getInt(6);
 				int autorid = rs.getInt(7);
 
-				User autor = getAuthorById(autorid);
-				ArrayList<Category> categorias = getCategoriesById(id); 
+				User autor = getAuthorById(autorid);					//método da classe pai DAO
+				ArrayList<Category> categorias = getCategoriesById(id); //método da classe pai DAO
 
 				receitas.add(new Recipe(id, titulo, ingredientes, conteudo, data, qntComentario, autor, categorias));
 			}
@@ -154,18 +154,15 @@ public class RecipeDAO extends DAO {
 
 			return receitas;
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println("Erro ao listar receitas: " + e.getMessage());
 			return null;
 		}
 	}
 
 	public Recipe getReceitaPorId(int idReceita) {	//método responsável por retornar uma receita através de seu ID
 		Recipe receita = null;
-		String query = "SELECT r.*, u.nome AS autor_nome " + "FROM Receitas r "
-				+ "INNER JOIN Usuarios u ON r.autor_id = u.usuario_id " + "WHERE r.receita_id = ?";// Tive que fazer
-																									// essa gambiarra p/
-																									// comseguir o nome
-																									// do autor
+		String query = "SELECT * FROM Receitas WHERE receita_id = ?";
+		
 		try {
 			Connection con = conectar();
 			PreparedStatement pst = con.prepareStatement(query);
@@ -184,7 +181,7 @@ public class RecipeDAO extends DAO {
 				receita.setAutor(autor);
 				
 				// Definindo categorias da receita
-				ArrayList<Category> categorias = getCategoriesById(receita.getId());
+				ArrayList<Category> categorias = getCategoriesById(receita.getId());//método da classe pai DAO
 				receita.setCategorias(categorias);	
 			}
 			con.close();
@@ -214,10 +211,8 @@ public class RecipeDAO extends DAO {
 				receita.setData(rs.getDate("data_publicacao"));
 
 				// Definindo o autor da receita
-				User autor = getAuthorById(rs.getInt("autor_id"));
-				// User autor = new User();
-				// autor.setId(rs.getInt("autor_id"));
-				// autor.setNome(rs.getString("autor_nome"));
+				User autor = getAuthorById(rs.getInt("autor_id")); //método da classe pai DAO
+
 				receita.setAutor(autor);
 
 				receitas.add(receita);
@@ -228,7 +223,8 @@ public class RecipeDAO extends DAO {
 		}
 		return receitas;
 	}
-    public void deletarReceita(int idReceita) {
+	
+    public void deletarReceita(int idReceita) {	//método responsável por deletar uma Receita atraves de um ID fornecido
         String query = "DELETE FROM Receitas WHERE receita_id = ?";
         try {
             Connection con = conectar();

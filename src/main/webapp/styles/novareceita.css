@@ -9,7 +9,8 @@ form{
     margin: 2rem;
     width: 80%;
     display: grid;
-    gap:10%;
+    column-gap:10%;
+    row-gap: 2rem;
     font-family: var(--subtitle-font);
 }
 

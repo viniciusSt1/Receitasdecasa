@@ -9,9 +9,7 @@ import java.util.ArrayList;// tive que importar p/ usar array's
 
 
 public class CommentDAO extends DAO {
-
-    // Método para adicionar um comentário ao banco de dados
-    public void adicionarComentario(Comment comentario) {
+    public void adicionarComentario(Comment comentario) {	// Método para adicionar um comentário ao banco de dados
         String query = "INSERT INTO Comentarios (texto, usuario_id,data_criacao, receita_id) VALUES (?, ?, now(), ?)";
         try {
             Connection con = conectar(); // Estabelece a conexão com o banco de dados
@@ -27,7 +25,7 @@ public class CommentDAO extends DAO {
         }
     }
 
-    public ArrayList<Comment> getComentariosPorReceita(int idReceita) {
+    public ArrayList<Comment> getComentariosPorReceita(int idReceita) {		//Método responsável por retornar uma lista de comentários de uma receita
         ArrayList<Comment> comentarios = new ArrayList<>();
         String query = "SELECT * FROM Comentarios WHERE receita_id = ?";
         try {
@@ -55,9 +53,26 @@ public class CommentDAO extends DAO {
         return comentarios; // Retorna a lista de comentários
     }
     
+    public void atualizaQntComentario(int idReceita, int qnt) {
+    	try {
+			String atualizar = "update receitas set qntComentario = qntComentario + ? where receita_id = ?";
+
+			Connection con = conectar(); // abrir conexão
+			PreparedStatement pst = con.prepareStatement(atualizar); // preparar query a ser executada
+			
+			pst.setInt(1, qnt);
+			pst.setInt(2, idReceita);
+			pst.executeUpdate();
+			con.close();
+			
+		} catch (Exception e) {
+			System.out.println("Erro ao atualizar quantidade de comentarios na receita: " + e.getMessage());
+		}
+    }
+    
 }
 
-/*
+/*	//ignore
 public ArrayList<Comment> getTodosComentarios() {
     ArrayList<Comment> comentarios = new ArrayList<>();
     String query = "SELECT * FROM Comentarios";
