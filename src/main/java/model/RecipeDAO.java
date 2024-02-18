@@ -228,5 +228,16 @@ public class RecipeDAO extends DAO {
 		}
 		return receitas;
 	}
-
+    public void deletarReceita(int idReceita) {
+        String query = "DELETE FROM Receitas WHERE receita_id = ?";
+        try {
+            Connection con = conectar();
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setInt(1, idReceita);
+            pst.executeUpdate();
+            con.close();
+        } catch (SQLException e) {
+            System.out.println("Erro ao deletar receita: " + e.getMessage());
+        }
+    }
 }
