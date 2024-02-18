@@ -20,10 +20,8 @@ body{
     font-size: 62.5%;
     
     --title-font: 'MilkMango', sans-serif;
-    --subtitle-font: 'Montserrat', sans-serif;
-    --secondary-font:'Bebas Neue', sans-serif;
+    --subtitle-font: sans-serif;
     --text-font: 'Roboto', sans-serif;
-    --inputs-font:'Bitter', sans-serif;
 
     --light-text-color: #FFFFFF;
     --light-secondary-text-color: #D1D1D1;
@@ -52,4 +50,14 @@ button{
     align-items: center;
     width:100%;
     max-width: 108rem;
+}
+
+.erro_msg{
+	color:darkred;
+	background-color: rgb(255,0,0,0.2);
+	padding:2rem;
+	margin-top:2rem;
+	width: 80%;
+	font-size: 1.7rem;
+	text-align: center;
 }

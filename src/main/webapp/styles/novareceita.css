@@ -9,7 +9,7 @@ form{
     margin: 2rem;
     width: 80%;
     display: grid;
-    gap:2rem;
+    gap:10%;
     font-family: var(--subtitle-font);
 }
 
@@ -66,7 +66,6 @@ form>div{
     width: 1.8rem;
     height: 1.8rem;
 }
-
 
 .categorias label{
     font-size: 1.5rem;

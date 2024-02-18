@@ -5,17 +5,19 @@ public class User {
 	private String nome;
 	private String email;
 	private String senha;
+	private int qntReceitas;
 	private Boolean admin;
 
 	public User() {
 
 	}
 
-	public User(int id, String nome, String email, String senha, Boolean admin) {
+	public User(int id, String nome, String email, String senha, int qntReceitas, Boolean admin) {
 		this.id = id;
 		this.nome = nome;
 		this.senha = senha;
 		this.email = email;
+		this.qntReceitas = qntReceitas;
 		this.admin = admin;
 	}
 
@@ -58,5 +60,13 @@ public class User {
 
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
+	}
+
+	public int getQntReceitas() {
+		return qntReceitas;
+	}
+
+	public void setQntReceitas(int qntReceitas) {
+		this.qntReceitas = qntReceitas;
 	}
 }

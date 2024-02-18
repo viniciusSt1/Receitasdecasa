@@ -9,8 +9,7 @@ public class Recipe {
 	private String ingredientes;
 	private String conteudo;
 	private Date data;
-	private int qntGostei;
-	private int qntNaoGostei;
+	private int qntComentario;
 	private User autor;
 	private ArrayList<Category> categorias;
 
@@ -18,8 +17,7 @@ public class Recipe {
 
 	}
 
-	public Recipe(int id, String titulo, String ingredientes, String conteudo, Date data, int qntGostei,
-			int qntNaoGostei, User autor, ArrayList<Category> categorias) {
+	public Recipe(int id, String titulo, String ingredientes, String conteudo, Date data, int qntComentario, User autor, ArrayList<Category> categorias) {
 		this.id = id;
 		this.titulo = titulo;
 		this.ingredientes = ingredientes;
@@ -27,8 +25,7 @@ public class Recipe {
 		this.data = data;
 		this.autor = autor;
 		this.categorias = categorias;
-		this.qntGostei = qntGostei;
-		this.qntNaoGostei = qntNaoGostei;
+		this.qntComentario = qntComentario;
 	}
 
 	// Gets e sets
@@ -64,22 +61,6 @@ public class Recipe {
 		this.conteudo = conteudo;
 	}
 
-	public int getQntGostei() {
-		return qntGostei;
-	}
-
-	public void setQntGostei(int qntGostei) {
-		this.qntGostei = qntGostei;
-	}
-
-	public int getQntNaoGostei() {
-		return qntNaoGostei;
-	}
-
-	public void setQntNaoGostei(int qntNaoGostei) {
-		this.qntNaoGostei = qntNaoGostei;
-	}
-
 	public User getAutor() {
 		return autor;
 	}
@@ -102,5 +83,13 @@ public class Recipe {
 
 	public void setData(Date data) {
 		this.data = data;
+	}
+
+	public int getQntComentario() {
+		return qntComentario;
+	}
+
+	public void setQntComentario(int qntComentario) {
+		this.qntComentario = qntComentario;
 	}
 }

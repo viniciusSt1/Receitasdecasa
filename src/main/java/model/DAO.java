@@ -15,7 +15,7 @@ public class DAO {
 	private String password = "Vinifera@123";
 
 	// Conexão com o bd
-	protected Connection conectar() {
+	protected Connection conectar() {						//metodo responsável para se conectar com o banco de dados
 		Connection con = null; // Connection de java.sql
 
 		try {
@@ -28,7 +28,7 @@ public class DAO {
 		}
 	}
 
-	protected User getAuthorById(int autorid) {
+	protected User getAuthorById(int autorid) {				//metodo responsável por retornar os dados de um usuario atravez do seu ID
 		String query = "SELECT * FROM Usuarios WHERE usuario_id = ?";
 		try {
 			Connection con = conectar(); // Estabelece conexão com o banco de dados
@@ -41,9 +41,10 @@ public class DAO {
 				String nome = rs.getString(2);
 				String email = rs.getString(3);
 				String senha = rs.getString(4);
-				boolean isAdmin = rs.getBoolean(5);
+				int qntReceitas = rs.getInt(5);
+				boolean isAdmin = rs.getBoolean(6);
 				con.close(); // Fecha a conexão com o banco de dados
-				return new User(id, nome, email, senha, isAdmin); // Retorna um objeto User com os dados do autor
+				return new User(id, nome, email, senha, qntReceitas, isAdmin); // Retorna um objeto User com os dados do autor
 			}
 		} catch (Exception e) {
 			System.out.println(e); // Trata qualquer exceção que possa ocorrer e imprime no console
@@ -51,10 +52,9 @@ public class DAO {
 		return null; // Retorna null se não encontrar o autor com o ID especificado
 	}
 
-	public ArrayList<Category> getCategoriesById(int id) {
+	public ArrayList<Category> getCategoriesById(int id) {	//método responsável por retornar uma lista de categorias associadas à receita com o ID especificado
 		ArrayList<Category> categories = new ArrayList<>(); // Cria uma lista para armazenar as categorias
-		// Consulta SQL para obter as categorias associadas à receita com o ID
-		// especificado
+
 		String query = "SELECT c.categoria_id, c.nome FROM Categorias c JOIN ReceitasCategorias rc ON c.categoria_id = rc.categoria_id WHERE rc.receita_id = ?";
 		try {
 			Connection con = conectar(); // Estabelece conexão com o banco de dados
@@ -73,5 +73,4 @@ public class DAO {
 		}
 		return categories; // Retorna a lista de categorias associadas à receita
 	}
-
 }

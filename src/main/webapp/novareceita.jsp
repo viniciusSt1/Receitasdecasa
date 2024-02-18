@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% String alerta = (String)request.getAttribute("alerta"); %>    
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -15,8 +16,11 @@
 	<% 
 		if(usuarioOnline == null || !usuarioOnline.getAdmin()){
 			response.sendRedirect("login.jsp");
-		}else{
+		}
 	%>
+	<%  if (alerta != null) { %>
+		    <p class="erro_msg"><%= alerta %></p>
+	<%  } %>
     <div class="container">
         <h2>Nova Receita</h2>
         <form action="cadastrarReceita">
@@ -32,20 +36,24 @@
                 <h3>Categorias da receita</h3>
                 <div class="categorias-inputs">
                     <div class="categorias-group">
-                        <input type="checkbox" id="cafedamanha" name="categorias[]" value="Cafe da manha">
-                        <label for="cafedamanha">Cafe da manha</label>
+                        <input type="checkbox" id="cafedamanha" name="categorias[]" value="Café da manhã">
+                        <label for="cafedamanha">Café da manhã</label>
                     </div>
                     <div class="categorias-group">
-                        <input type="checkbox" id="almoco" name="categorias[]" value="Almoco">
-                        <label for="almoco">Almoco</label>
+                        <input type="checkbox" id="almoco" name="categorias[]" value="Almoço">
+                        <label for="almoco">Almoço</label>
                     </div>
                     <div class="categorias-group">
-                        <input type="checkbox" id="cafedatarde" name="categorias[]" value="Cafe da tarde">
-                        <label for="cafedatarde">Cafe da tarde</label>
+                        <input type="checkbox" id="doce" name="categorias[]" value="Doces e Sobremesas">
+                        <label for="doce">Doces e Sobremesas</label>
                     </div>
                     <div class="categorias-group">
-                        <input type="checkbox" id="janta" name="categorias[]" value="Janta">
-                        <label for="janta">Janta</label>
+                        <input type="checkbox" id="cafedatarde" name="categorias[]" value="Café da tarde">
+                        <label for="cafedatarde">Café da tarde</label>
+                    </div>
+                    <div class="categorias-group">
+                        <input type="checkbox" id="jantar" name="categorias[]" value="Jantar">
+                        <label for="jantar">Jantar</label>
                     </div>
                     <div class="categorias-group">
                         <input type="checkbox" id="massas" name="categorias[]" value="Massas">
@@ -62,6 +70,5 @@
             </div>
         </form>
     </div>
-    <%} //fechamento do else %>
 </body>
 </html>

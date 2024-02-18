@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%  String alerta = (String)request.getAttribute("alerta"); %>
 	
 <!DOCTYPE html>
 <html>
@@ -19,10 +19,15 @@
 			response.sendRedirect("perfil.jsp");
 		}else{
   	%>
+  	
+	<%  if (alerta != null) { %>
+    		<p class="erro_msg"><%= alerta %></p>
+    <% } %>
   
     <h2>Login</h2>
 
     <form id="form" action="login">
+    	
       	<div class="input-container">
         	<label>Email</label>
         	<input type="email" placeholder="Informe o email" name="email" required/>

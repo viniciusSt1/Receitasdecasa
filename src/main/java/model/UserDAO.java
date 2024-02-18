@@ -44,17 +44,16 @@ public class UserDAO extends DAO {
 			// atribuindo os valores na query
 			pst.setString(1, email);
 			pst.setString(2, senha);
-			System.out.println(email);
-			System.out.println(senha);
 			ResultSet resultSet = pst.executeQuery(); // executando comandos
 
 			if (resultSet.next()) { // Encontrou um resultado
 				// pega os dados desse resultado
 				int usuarioId = resultSet.getInt("usuario_id");
 				String nome = resultSet.getString("nome");
+				int qntReceitas = resultSet.getInt("qntReceitas");
 				boolean isAdmin = resultSet.getBoolean("isAdmin");
 
-				usuario = new User(usuarioId, nome, email, senha, isAdmin); // preenche um novo user para retornar
+				usuario = new User(usuarioId, nome, email, senha, qntReceitas, isAdmin); // preenche um novo user para retornar
 			}
 
 		} catch (Exception e) {
@@ -86,8 +85,7 @@ public class UserDAO extends DAO {
 	}
 
 	public void atualizarUsuario(User usuario) {
-		String update = "UPDATE Usuarios SET nome = ?, email = ?, senha = ? WHERE usuario_id = ?"; // comando a ser
-																									// executado no bd
+		String update = "UPDATE Usuarios SET nome = ?, email = ?, senha = ? WHERE usuario_id = ?"; // comando a ser executado no bd
 
 		try {
 			Connection con = conectar(); // comando a ser executado no bd

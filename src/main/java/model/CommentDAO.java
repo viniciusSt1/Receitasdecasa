@@ -1,17 +1,18 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;// tive que importar p/ usar array's
-import java.sql.ResultSet;
 
 
 public class CommentDAO extends DAO {
 
     // Método para adicionar um comentário ao banco de dados
     public void adicionarComentario(Comment comentario) {
-        String query = "INSERT INTO Comentarios (texto, usuario_id, receita_id) VALUES (?, ?, ?)";
+        String query = "INSERT INTO Comentarios (texto, usuario_id,data_criacao, receita_id) VALUES (?, ?, now(), ?)";
         try {
             Connection con = conectar(); // Estabelece a conexão com o banco de dados
             PreparedStatement pst = con.prepareStatement(query);
@@ -40,9 +41,10 @@ public class CommentDAO extends DAO {
                 int usuarioId = rs.getInt("usuario_id");
                 User autor = getAuthorById(usuarioId); // Obter informações do autor do comentário
                
-                String dataCriacao = rs.getString("data_criacao");
+                Date dataCriacao = rs.getDate("data_criacao");
                 // Construindo o objeto Comment com os dados obtidos do banco de dados
                 Comment comentario = new Comment(id, texto, dataCriacao, autor, null);
+                
                 comentarios.add(comentario); // Adiciona o comentário à lista de comentários
             }
             con.close(); // Fecha a conexão com o banco de dados

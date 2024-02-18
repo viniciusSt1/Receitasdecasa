@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.Recipe;
 import model.RecipeDAO;
 
-@WebServlet(urlPatterns = { "/index.html", "/receita" })
+@WebServlet(urlPatterns = { "/index.html", "/receitas" })
 public class ControllerRecipes extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private RecipeDAO dao = new RecipeDAO();
@@ -24,50 +24,60 @@ public class ControllerRecipes extends HttpServlet {
 		// Controle das requisições ao acessar as rotas desse servlet
 		if (action.equals("/index.html")) {
 			listarReceitas(request, response);
-		} else if (action.equals("/receita")) {
-			visualizarReceita(request, response);
+		} else if (action.equals("/receitas")) {
+			visualizarReceitasNaCategoria(request,response);
 		}
 	}
 
 	protected void listarReceitas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ArrayList<Recipe> receitas = dao.listarReceitas(); // pegar a lista de receitas no banco de dados
 
+		/*
+		//testando preenchimento da lista de receitas
+		for(int i=0;i<receitas.size();i++) {
+			System.out.println("Dados receita");
+			System.out.println(receitas.get(i).getId());
+			System.out.println(receitas.get(i).getTitulo());
+			System.out.println(receitas.get(i).getIngredientes());
+			System.out.println(receitas.get(i).getConteudo());
+			System.out.println(receitas.get(i).getData());
+			System.out.println(receitas.get(i).getQntComentario());
+			System.out.println("Criador");
+			System.out.println(receitas.get(i).getAutor().getId());
+			System.out.println(receitas.get(i).getAutor().getNome());
+			System.out.println(receitas.get(i).getAutor().getSenha());
+			System.out.println(receitas.get(i).getAutor().getQntReceitas());
+			System.out.println(receitas.get(i).getAutor().getAdmin());
+			System.out.println("Categorias");
+			for(int j=0;j<receitas.get(i).getCategorias().size();j++) {
+				System.out.print(receitas.get(i).getCategorias().get(j).getId()+"       ");
+				System.out.println(receitas.get(i).getCategorias().get(j).getNome());
+			}
+		}
+		*/
+		
 		// redirecionar para a pagina inicial mandando a lista de receitas a ser mostradas no jsp
 		request.setAttribute("receitas", receitas);
 		RequestDispatcher rd = request.getRequestDispatcher("/receitas.jsp");
 		rd.forward(request, response);
 	}
-
-	protected void visualizarReceita(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-	    // Obtendo o parâmetro "IDreceitas" da requisição
-	    int IDreceita = Integer.parseInt(request.getParameter("receita_id"));
-	    
-	    // Obtendo a receita com base no ID
-	    Recipe receita = dao.getReceitaPorId(IDreceita);
-	            
-	    // Enviando a receita para o JSP
-	    request.setAttribute("receita", receita);
-	    RequestDispatcher rd = request.getRequestDispatcher("/receita.jsp");
-	    rd.forward(request, response);
-	}
 	
-	protected void VisualizarReceitasNaCategoria(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Obtendo o ID da categoria da solicitação
+	protected void visualizarReceitasNaCategoria(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 	        int idCategoria = Integer.parseInt(request.getParameter("categoria_id"));
 	
 	        ArrayList<Recipe> receitas = dao.getReceitasPorCategoria(idCategoria);
+	        String categoriaName = dao.getString_categoria(idCategoria);
 	
 	        // Definindo as receitas como atributo da solicitação para enviar ao JSP
 	        request.setAttribute("receitas", receitas);
+	        request.setAttribute("categoria", categoriaName);
 	
 	        // Encaminhando para o JSP para exibir as receitas
 	        RequestDispatcher rd = request.getRequestDispatcher("/receitas.jsp");
 	        rd.forward(request, response);
 		} catch (NumberFormatException e) {
-
-            response.sendRedirect("erro.jsp");
+			
         }
 	}
 }

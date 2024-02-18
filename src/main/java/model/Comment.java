@@ -1,9 +1,11 @@
 package model;
 
+import java.util.Date;
+
 public class Comment {
 	int id;
 	String conteudo;
-	String data_criacao;
+	Date data_criacao;
 	User autor;
 	Recipe receita;
 	
@@ -11,7 +13,7 @@ public class Comment {
 		super();
 	}
 	
-	public Comment(int id, String conteudo, String data_criacao, User autor, Recipe receita) {
+	public Comment(int id, String conteudo, Date data_criacao, User autor, Recipe receita) {
 		super();
 		this.id = id;
 		this.conteudo = conteudo;
@@ -34,10 +36,10 @@ public class Comment {
 		this.conteudo = conteudo;
 	}
 
-	public String getData_criacao() {
+	public Date getData_criacao() {
 		return data_criacao;
 	}
-	public void setData_criacao(String data_criacao) {
+	public void setData_criacao(Date data_criacao) {
 		this.data_criacao = data_criacao;
 	}
 	

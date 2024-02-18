@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<% String alerta = (String)request.getAttribute("alerta"); %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,10 +13,15 @@
 </head>
 <body>
     <%@ include file="header.jsp" %>
-
+    
+    <% if (alerta != null) { %>
+	    	<p class="erro_msg"><%= alerta %></p>
+	<% } %>
+	
     <h2>Cadastro</h2>
-
     <form action="cadastroUsuario">
+	    
+    
       	<div class="input-container">
     		<label>Nome</label>
         	<input type="text" placeholder="Informe o nome" name="nome" required/>
@@ -34,8 +40,7 @@
 		<div class="input-container">
 			<label>Confirmação da Senha</label>
 			<input type="password" placeholder="Informe a senha novamente" name="confsenha" required/>
-		</div>
-		
+		</div>	
 		<div class="button">
 			<button id="salvar" type="submit">Salvar</button>
 		</div>

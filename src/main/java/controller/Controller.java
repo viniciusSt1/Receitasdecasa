@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +18,7 @@ import model.Recipe;
 import model.RecipeDAO;
 import model.User;
 
-@WebServlet(urlPatterns = { "/comentar", "/cadastrarReceita" })
+@WebServlet(urlPatterns = { "/comentar", "/cadastrarReceita", "/receita" })
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private CommentDAO comentarioDAO = new CommentDAO();
@@ -27,14 +28,12 @@ public class Controller extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getServletPath();
-		System.out.println("Entrei no if de actions");
-
 		// Controle das requisições ao acessar as rotas desse servlet
 		if (action.equals("/comentar")) {
 			comentar(request, response);
-		}
-
-		if (action.equals("/cadastrarReceita")) {
+		}else if (action.equals("/receita")) {
+			visualizarReceita(request, response);
+		} else if (action.equals("/cadastrarReceita")) {
 			cadastrarReceita(request, response);
 		}
 
@@ -43,7 +42,7 @@ public class Controller extends HttpServlet {
 	protected void comentar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Obtendo os parâmetros do formulário de comentário
 		String conteudo = request.getParameter("conteudo"); // Supondo que "conteudo" seja o nome do campo de texto do comentário
-		int idReceita = Integer.parseInt(request.getParameter("idReceita")); // Supondo que "idReceita" seja o ID da receita à qual o comentário será associado
+		int idReceita = Integer.parseInt(request.getParameter("receita_id")); // Supondo que "idReceita" seja o ID da receita à qual o comentário será associado
 		
 		HttpSession session = request.getSession();
 		autor = (User) session.getAttribute("usuario"); // pegar usuario logado atualmente
@@ -61,68 +60,58 @@ public class Controller extends HttpServlet {
 		comentarioDAO.adicionarComentario(novoComentario);
 
 		// Redirecionando de volta para a página da receita ou realizando outra ação desejada
-		response.sendRedirect(""); // Colocar a rota
+		response.sendRedirect("receita?receita_id="+request.getParameter("receita_id")); // Colocar a rota
 	}
 
 	protected void cadastrarReceita(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		autor = (User) session.getAttribute("usuario");
 		ArrayList<Category> vet_categorias = new ArrayList<Category>();
-		Category categoria_cache = new Category();
+		int id_cat = 0;
 
 		// Armazenando vetor de categorias
-		String cache_checkbox = request.getParameter("Cafe da manha");
-		if (cache_checkbox != null) {
-			categoria_cache.setId(1);
-			categoria_cache.setNome(cache_checkbox);
-			vet_categorias.add(categoria_cache);
+		String[] cache_checkbox = request.getParameterValues("categorias[]");
+		
+		//verifica se foi selecionado uma ou mais categorias
+		if(cache_checkbox!= null && cache_checkbox.length> 0) {
+			
+			for (String categoria : cache_checkbox) {	//preenchendo o ArrayList de categorias de acordo com o forms
+				id_cat = recipe_DAO.getID_categoria(categoria);
+				vet_categorias.add(new Category(id_cat, categoria));
+			}
+			
+			// Inserção da Receita
+			receita.setTitulo(request.getParameter("titulo"));
+			receita.setIngredientes(request.getParameter("ingredientes"));
+			receita.setConteudo(request.getParameter("conteudo"));
+			receita.setCategorias(vet_categorias);
+			receita.setAutor(autor);
+			recipe_DAO.cadastrarReceita(receita);
+			recipe_DAO.cadastrarCategoria(receita);
+			recipe_DAO.atualiza_qntReceita(autor);
+			response.sendRedirect("index.html"); // redirecionar para pagina inicial
 		}
-
-		cache_checkbox = request.getParameter("Almoco");
-		if (cache_checkbox != null) {
-			categoria_cache.setId(2);
-			categoria_cache.setNome(cache_checkbox);
-			vet_categorias.add(categoria_cache);
+		else {
+			//Se nenhuma categoria for selecionada, enviar um alerta ao usuario.
+			String alerta = "Selecione pelo menos 1 categoria";
+			request.setAttribute("alerta", alerta);
+			request.getRequestDispatcher("/novareceita.jsp").forward(request, response);
 		}
-
-		cache_checkbox = request.getParameter("Cafe da tarde");
-		if (cache_checkbox != null) {
-			categoria_cache.setId(3);
-			categoria_cache.setNome(cache_checkbox);
-			vet_categorias.add(categoria_cache);
-		}
-
-		cache_checkbox = request.getParameter("Janta");
-		if (cache_checkbox != null) {
-			categoria_cache.setId(4);
-			categoria_cache.setNome(cache_checkbox);
-			vet_categorias.add(categoria_cache);
-		}
-
-		cache_checkbox = request.getParameter("Massas");
-		if (cache_checkbox != null) {
-			categoria_cache.setId(5);
-			categoria_cache.setNome(cache_checkbox);
-			vet_categorias.add(categoria_cache);
-		}
-
-		cache_checkbox = request.getParameter("Bebidas");
-		if (cache_checkbox != null) {
-			categoria_cache.setId(6);
-			categoria_cache.setNome(cache_checkbox);
-			vet_categorias.add(categoria_cache);
-		}
-
-		// Inserção da Receita
-		receita.setTitulo(request.getParameter("titulo"));
-		receita.setIngredientes(request.getParameter("ingredientes"));
-		receita.setConteudo(request.getParameter("conteudo"));
-		receita.setCategorias(vet_categorias);
-		receita.setAutor(autor);
-		// receita.setCategorias(request.getParameter("categorias[]"));
-
-		recipe_DAO.cadastrarReceita(receita);
-		response.sendRedirect("index.html"); // redirecionar para pagina inicial
+	}
+	
+	protected void visualizarReceita(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    // Obtendo o parâmetro "IDreceitas" da requisição
+	    int IDreceita = Integer.parseInt(request.getParameter("receita_id"));
+	    
+	    // Obtendo a receita com base no ID
+	    Recipe receita = recipe_DAO.getReceitaPorId(IDreceita);
+	    ArrayList<Comment> comentarios = comentarioDAO.getComentariosPorReceita(receita.getId());
+	            
+	    // Enviando a receita para o JSP
+	    request.setAttribute("receita", receita);
+	    request.setAttribute("comentarios", comentarios);
+	    RequestDispatcher rd = request.getRequestDispatcher("/receita.jsp");
+	    rd.forward(request, response);
 	}
 
 }

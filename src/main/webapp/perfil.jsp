@@ -51,7 +51,7 @@
 			<% if(usuarioOnline.getAdmin()){ %>
 			<div class="quadro">
 				<h3 class="titulo-quadro">Receitas Criadas</h3>
-				<p class="numero-quadro">10</p>
+				<p class="numero-quadro"><%= usuarioOnline.getQntReceitas() %></p>
 			</div>
 
 			<div class="quadro">

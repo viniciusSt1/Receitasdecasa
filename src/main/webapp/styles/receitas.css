@@ -17,6 +17,11 @@ h2{
   vertical-align: top;
 }
 
+.categoria-item a{
+	text-decoration: none;
+	color:black;
+}
+
 .categoria-item img {
   width: 10rem;
   height: 10rem;
@@ -50,15 +55,15 @@ h2{
 .tituloReceita{
   color: var(--primary-color);
   font-size: 3rem;
-  font-family: var(--subtitle-font);
-  list-style: none;
+  font-family: 'Franklin Gothic Medium';
+  text-decoration: none;
 }
 
 .usuarioPub{
-	font-size: 1.2rem;
+	font-size: 1.5rem;
 	color:var(--gray-text-color);
-	font-family: sans-serif;
-	font-weight: bold;
+	font-family: 'Franklin Gothic Medium';
+	font-weight: 600;
 }
 
 .qntComentarios,.dataPub{

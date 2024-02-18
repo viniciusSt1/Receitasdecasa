@@ -39,15 +39,23 @@ public class ControllerUser extends HttpServlet {
 	protected void cadastrarUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		User novoUsuario = new User();
+		String confsenha = request.getParameter("confsenha");
 		// pegar parametros recebidos atraves do forms
 		novoUsuario.setNome(request.getParameter("nome"));
 		novoUsuario.setEmail(request.getParameter("email"));
 		novoUsuario.setSenha(request.getParameter("senha"));
 		novoUsuario.setAdmin(false);
-
-		dao.cadastrarUsuario(novoUsuario); // mandar um usuario para classe dao fazer o cadastro no bd
-
-		response.sendRedirect("index.html"); // redirecionar para pagina inicial
+		
+		if (novoUsuario.getSenha().equals(confsenha)) {
+			// mandar um usuario para classe dao fazer o cadastro no bd
+			dao.cadastrarUsuario(novoUsuario);
+			response.sendRedirect("index.html"); // redirecionar para pagina inicial
+		}
+		else {
+			String alerta = "Senhas não coincidem";
+			request.setAttribute("alerta", alerta);
+			request.getRequestDispatcher("/cadastro.jsp").forward(request, response);
+		}
 	}
 
 	protected void deletarUsuario(HttpServletRequest request, HttpServletResponse response)
@@ -75,7 +83,9 @@ public class ControllerUser extends HttpServlet {
 			usuarioAtualizado.setNome(request.getParameter("nome"));
 			usuarioAtualizado.setEmail(request.getParameter("email"));
 			usuarioAtualizado.setSenha(request.getParameter("senha"));
-
+			usuarioAtualizado.setQntReceitas(usuario.getQntReceitas());
+			usuarioAtualizado.setAdmin(usuario.getAdmin());
+			
 			dao.atualizarUsuario(usuarioAtualizado); // enviando usuario com novos dados e seu id para ser atualizado
 			session.setAttribute("usuario", usuarioAtualizado);
 			response.sendRedirect("perfil.jsp");
@@ -93,13 +103,13 @@ public class ControllerUser extends HttpServlet {
 		String senha = request.getParameter("senha");
 
 		usuario = dao.validarCredenciais(email, senha); // validando se existe algum usuario com esses dados
-		if (usuario != null) {
-			System.out.println("Valido");
+		if (usuario != null) {	//credenias validas
 			session.setAttribute("usuario", usuario);
 			response.sendRedirect("perfil.jsp");
 		} else {
-			System.out.println("In-Valido");
-			response.sendRedirect("login.jsp");
+			String alerta = "Senha ou Usuario Incorreto. Tente Novamente";
+			request.setAttribute("alerta", alerta);
+			request.getRequestDispatcher("/login.jsp").forward(request, response);
 		}
 
 	}
