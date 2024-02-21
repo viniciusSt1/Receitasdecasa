@@ -1,26 +1,19 @@
 package model;
 
-public class Category {
-	private int id;
+public class Category extends JavaBeans{
+	private static final long serialVersionUID = 1L;
 	private String nome;
 	
 	public Category(){
-		super();
+
 	}
 	
 	public Category(int id, String nome){
-		super();
-		this.id=id;
+		super(id);
 		this.nome=nome;
 	}
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id=id;
-	}
-	
+	//Gets e Sets
 	public String getNome() {
 		return nome;
 	}

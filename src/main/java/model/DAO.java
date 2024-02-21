@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-public class DAO {
+abstract class DAO {
 	// Parâmetros para conexão
 	private String driver = "com.mysql.cj.jdbc.Driver"; // driver na pasta WEB-INF/lib
 	private String url = "jdbc:mysql://127.0.0.1/db_receitas?useTimeZone=true&serverTimeZone=UTC";

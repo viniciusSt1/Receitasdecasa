@@ -1,7 +1,7 @@
 package model;
 
-public class User {
-	private int id;
+public class User extends JavaBeans{
+	private static final long serialVersionUID = 1L;
 	private String nome;
 	private String email;
 	private String senha;
@@ -13,7 +13,7 @@ public class User {
 	}
 
 	public User(int id, String nome, String email, String senha, int qntReceitas, Boolean admin) {
-		this.id = id;
+		super(id);
 		this.nome = nome;
 		this.senha = senha;
 		this.email = email;
@@ -22,14 +22,6 @@ public class User {
 	}
 
 	// Gets e sets
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getNome() {
 		return nome;
 	}

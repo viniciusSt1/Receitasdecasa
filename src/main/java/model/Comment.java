@@ -2,33 +2,26 @@ package model;
 
 import java.util.Date;
 
-public class Comment {
-	int id;
-	String conteudo;
-	Date data_criacao;
-	User autor;
-	Recipe receita;
+public class Comment extends JavaBeans{
+	private static final long serialVersionUID = 1L;
+	private String conteudo;
+	private Date data_criacao;
+	private User autor;
+	private Recipe receita;
 	
 	public Comment() {
-		super();
+
 	}
 	
 	public Comment(int id, String conteudo, Date data_criacao, User autor, Recipe receita) {
-		super();
-		this.id = id;
+		super(id);
 		this.conteudo = conteudo;
 		this.data_criacao = data_criacao;
 		this.autor = autor;
 		this.receita = receita;
 	}
-	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 
+	//Gets e Sets
 	public String getConteudo() {
 		return conteudo;
 	}

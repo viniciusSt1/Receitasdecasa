@@ -3,8 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Recipe {
-	private int id;
+public class Recipe extends JavaBeans{
+	private static final long serialVersionUID = 1L;
 	private String titulo;
 	private String ingredientes;
 	private String conteudo;
@@ -18,7 +18,7 @@ public class Recipe {
 	}
 
 	public Recipe(int id, String titulo, String ingredientes, String conteudo, Date data, int qntComentario, User autor, ArrayList<Category> categorias) {
-		this.id = id;
+		super(id);
 		this.titulo = titulo;
 		this.ingredientes = ingredientes;
 		this.conteudo = conteudo;
@@ -29,14 +29,6 @@ public class Recipe {
 	}
 
 	// Gets e sets
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getTitulo() {
 		return titulo;
 	}
