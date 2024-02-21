@@ -24,16 +24,13 @@ public class ControllerUser extends HttpServlet {
 		String action = request.getServletPath();
 
 		// Controle das requisições ao acessar as rotas desse servlet
-		if (action.equals("/cadastroUsuario")) {
-			cadastrarUsuario(request, response);
-		} else if (action.equals("/deleteUsuario")) {
-			deletarUsuario(request, response);
-		} else if (action.equals("/atualizarUsuario")) {
-			atualizarUsuario(request, response);
-		} else if (action.equals("/login")) {
-			login(request, response);
-		} else if (action.equals("/deslogar")) {
-			deslogar(request, response);
+		switch(action)
+		{
+		case "/cadastroUsuario" : cadastrarUsuario(request, response); break;
+		case "/deleteUsuario" : deletarUsuario(request, response); break;
+		case "/atualizarUsuario" :  atualizarUsuario(request, response); break; 
+		case "/login" : login(request, response); break;
+		case "/deslogar" : deslogar(request, response); break;
 		}
 
 	}
