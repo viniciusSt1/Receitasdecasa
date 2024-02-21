@@ -209,6 +209,7 @@ public class RecipeDAO extends DAO {
 				receita.setTitulo(rs.getString("titulo"));
 				receita.setConteudo(rs.getString("conteudo"));
 				receita.setData(rs.getDate("data_publicacao"));
+				receita.setQntComentario(rs.getInt("qntComentario"));
 
 				// Definindo o autor da receita
 				User autor = getAuthorById(rs.getInt("autor_id")); //método da classe pai DAO
